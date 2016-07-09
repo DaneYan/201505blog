@@ -6,7 +6,7 @@ module.exports = function(name){
         //则输出日志,否则不输出日志
         //console.log(DEBUG,name);
         if(DEBUG == name){
-            console.log(msg);
+            console.log(name,'',msg,'+0ms');
         }
     }
 }
