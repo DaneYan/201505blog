@@ -8,8 +8,8 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 //路由
 var routes = require('./routes/index');
-var users = require('./routes/users');
-
+var user = require('./routes/user');
+var article = require('./routes/article');
 var app = express();
 
 //设置模板引擎
@@ -31,7 +31,8 @@ app.use(cookieParser());//处理cookie
 app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', routes);//指定路由
-app.use('/users', users);//指定用户路由
+app.use('/user', user);//指定用户路由
+app.use('/article', article);//指定文章的路由
 
 // catch 404 and forward to error handler
 // 捕获404错误并转向错误处理中间件
