@@ -11,7 +11,7 @@
                 <a href="/article/detail/<%=article._id%>"><%=article.title%></a>
             </h4>
             <p><%-article.content%></p>
-            <span>发表时间:<%=article.createAt.toLocaleString()%></span>
+            <span>发表时间:<%=article.createAt.toLocaleString()%></span> <span>PV:<%=article.pv%></span>
         </div>
     </div>
 <%});%>

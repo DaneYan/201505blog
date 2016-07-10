@@ -1,4 +1,5 @@
 var express = require('express');
+var async = require('async');
 //路由工厂生成一个路由实例
 var router = express.Router();
 
@@ -69,21 +70,35 @@ router.post('/add',function(req,res){
     }
 
 });
+
 //路径参数 把参数放在路径里面
 router.get('/detail/:_id',function(req,res){
     //从路径参数中获取ID
     var _id = req.params._id;
-    //按照ID查询文章的对象
-    Model('Article').findById(_id,function(err,doc){
+    async.parallel([
+        function(cb){
+            //inc 把原来的值增加1
+            Model('Article').update({_id:_id},{$inc:{pv:1}},function(err,result){
+                cb();
+            })
+        },
+        function(cb){
+            //按照ID查询文章的对象
+            Model('Article').findById(_id,function(err,doc){
+                cb(err,doc);
+            })
+        }
+    ],function(err,result){
         if(err){
             req.flash('error','查看详情失败');
             res.redirect('back');
         }else{
             req.flash('success','查看详情成功');
             //渲染详情页的模板
-            res.render('article/detail',{title:'文章详情',article:doc});
+            res.render('article/detail',{title:'文章详情',article:result[1]});
         }
-    })
+    });
+
 });
 
 router.get('/delete/:_id',function(req,res){

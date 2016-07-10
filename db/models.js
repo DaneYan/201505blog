@@ -12,7 +12,8 @@ module.exports = {
         user:{type:ObjectId,ref:'User'},
         title:{type:String,required:true},
         content:{type:String,required:true},
-        createAt:{type:Date,default:Date.now()}
+        createAt:{type:Date,default:Date.now()},
+        pv:{type:Number,default:0}
 
     }
 }
