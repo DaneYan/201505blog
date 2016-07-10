@@ -6,6 +6,12 @@ router.get('/reg', function(req, res, next) {
   //第一个是相对路径，相对于views也就是模板的根目录
   res.render('user/reg',{title:'注册'});
 });
+//接收注册表单
+router.post('/reg',function(req,res){
+   //接收请求体，然后保存后数据库中
+
+});
+
 
 //登陆 当用户访问此路径的时候返回一个空白表单
 router.get('/login', function(req, res, next) {
