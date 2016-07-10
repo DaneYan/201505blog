@@ -10,6 +10,8 @@ var bodyParser = require('body-parser');
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var article = require('./routes/article');
+// 引入数据库操作模块
+var db = require('./db');
 var app = express();
 
 //设置模板引擎
@@ -25,7 +27,7 @@ app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //记录访问日志的
 app.use(logger('tiny'));//dev是一种日志格式
 app.use(bodyParser.json());//处理JSON请求体
-app.use(bodyParser.urlencoded({ extended: false }));//处理表单序列化 urlencoded请求体
+app.use(bodyParser.urlencoded({ extended: true }));//处理表单序列化 urlencoded请求体
 app.use(cookieParser());//处理cookie
 //处理静态文件
 app.use(express.static(path.join(__dirname, 'public')));
