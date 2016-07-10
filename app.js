@@ -29,7 +29,9 @@ app.engine('.html',require('ejs').__express);
 //当你在public目录下放置了收藏夹图标后可以取消此注释
 app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
 //记录访问日志的
-app.use(logger('tiny'));//dev是一种日志格式
+var fs = require('fs');
+var ws = fs.createWriteStream('./access.log',{flags:'a'});
+app.use(logger('tiny',{stream:ws}));//dev是一种日志格式
 app.use(bodyParser.json());//处理JSON请求体
 app.use(bodyParser.urlencoded({ extended: true }));//处理表单序列化 urlencoded请求体
 app.use(cookieParser());//处理cookie
@@ -78,13 +80,14 @@ app.use(function(req, res, next) {
 // will print stacktrace
 //开发错误处理的时候将要打印堆栈信息
 //env是通过express读取环境变量中的NODE_ENV变量来设置到app 中去的
-console.log('env',app.get('env'));
+var errorLog = fs.createWriteStream('./error.log',{flags:'a'});
 // product
 if (app.get('env') === 'development') {
   // 通过中间件函数的参数数量来判断什么是错误处理中间件
   //如果有4个参数就是错误处理中间件
   app.use(function(err, req, res, next) {
     res.status(err.status || 500);
+    errorLog.write(err.status+' '+err.stack);
     res.render('error', {
       message: err.message,
       error: err
