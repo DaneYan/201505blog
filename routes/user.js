@@ -15,7 +15,7 @@ router.post('/reg',function(req,res){
   var user = req.body;
   console.log(user);
   if(user.password != user.repassword){
-    console.error('密码和重复密码不一致');
+    req.flash('error','密码和重复密码不一致');
     return res.redirect('back');//表示返回上一个页面
   }
   //删除不需要保存的字段
@@ -27,11 +27,17 @@ router.post('/reg',function(req,res){
   //保存一个文档
   Model('User').create(user,function(err,doc){
     if(err){
+      req.flash('error','注册用户失败');
       return res.redirect('back');
     }else{
       //把保存之后的用户文档对象赋给req.session
       //然后就可以通过req.session上是否有user的属性来判断用户是否登录
+      //二个参数表示设置消息
+      req.flash('success','恭喜注册用户成功');
+      //一个参数表示获取消息 获得是一个数组
+      //req.flash('success').toString();
       req.session.user = doc;
+      //告诉 客户端向新的地址发起请求
       res.redirect('/');
     }
   })

@@ -4,7 +4,8 @@ var router = express.Router();
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
+  // flash一闪而过 如果取值之后会把值删除掉
+  res.render('index', { title: 'Express'});
 });
 
 

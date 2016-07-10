@@ -13,6 +13,7 @@ var routes = require('./routes/index');
 var user = require('./routes/user');
 var article = require('./routes/article');
 var settings = require('./settings');
+var flash = require('connect-flash');
 // 引入数据库操作模块
 var db = require('./db');
 var app = express();
@@ -41,6 +42,17 @@ app.use(session({
     url:settings.url//指定数据库的url
   })
 }));
+//flash是依赖session,因为flash中的消息是放在会话中的session
+//使用flash中间件在放在使用session中间件的下面
+// req.flash
+app.use(flash());
+//把flash中的消息 取出来赋给模板变量
+app.use(function(req,res,next){
+  //res.locals 才是真正的渲染模板的对象
+  res.locals.success = req.flash('success').toString();
+  res.locals.error = req.flash('error').toString();
+  next();
+});
 //处理静态文件
 app.use(express.static(path.join(__dirname, 'public')));
 
