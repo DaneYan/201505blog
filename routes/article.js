@@ -28,7 +28,35 @@ router.post('/add',function(req,res){
           return res.redirect('/');
       }
     });
+});
+//路径参数 把参数放在路径里面
+router.get('/detail/:_id',function(req,res){
+    //从路径参数中获取ID
+    var _id = req.params._id;
+    //按照ID查询文章的对象
+    Model('Article').findById(_id,function(err,doc){
+        if(err){
+            req.flash('error','查看详情失败');
+            res.redirect('back');
+        }else{
+            req.flash('success','查看详情成功');
+            //渲染详情页的模板
+            res.render('article/detail',{title:'文章详情',article:doc});
+        }
+    })
+});
 
+router.get('/delete/:_id',function(req,res){
+    var _id = req.params._id;//得到路径中的ID
+    Model('Article').remove({_id:_id},function(err,result){
+        if(err){//删除失败了
+            req.flash('error','删除失败');
+            return res.redirect('back');
+        }else{
+            req.flash('success','删除成功');
+            return res.redirect('/');//跳转到首页
+        }
+    });
 });
 module.exports = router;
 
