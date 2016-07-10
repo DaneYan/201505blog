@@ -38,7 +38,7 @@ router.post('/add',function(req,res){
 
         article.user = req.session.user._id;
         //如果要保存的对象中有ID的话，那么mongodb不会帮你自动ID了
-        delete article._id;
+        //delete article._id;
         Model('Article').create(article,function(err,doc){
             if(err){
                 req.flash('error','发表文章失败');
