@@ -3,10 +3,28 @@ var express = require('express');
 var router = express.Router();
 
 router.get('/list',function(req,res){
+    var keyword = req.query.keyword;
+    var pageNum = req.query.pageNum?Number(req.query.pageNum):1;//当前页码 默认值为第一页
+    var pageSize = req.query.pageSize?Number(req.query.pageSize):2;//每页条数 默认值为每页2条
+    var query = {};
+    if(keyword){
+        //查询标题符合此正则的文档
+        query.title = new RegExp(keyword);
+    }
     //populate可以传一个属性进去
     //负责把一个属性从对象ID类型转成一个文档对象
-    Model('Article').find({}).populate('user').exec(function(err,docs){
-        res.render('article/list', { title: '文章列表',articles:docs});
+    //用来统计每页的条数
+    Model('Article').find(query).count(function(err,count){
+        Model('Article').find(query).skip((pageNum-1)*pageSize).limit(pageSize).populate('user').exec(function(err,docs){
+            res.render('article/list', {
+                title: '文章列表',
+                articles:docs,//当前页的记录
+                pageNum:pageNum,//当前页码
+                pageSize:pageSize,//每页条数
+                keyword:keyword,//关键字
+                totalPage:Math.ceil(count/pageSize)//一共多少页
+            });
+        });
     });
 });
 
