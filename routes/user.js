@@ -29,6 +29,9 @@ router.post('/reg',function(req,res){
     if(err){
       return res.redirect('back');
     }else{
+      //把保存之后的用户文档对象赋给req.session
+      //然后就可以通过req.session上是否有user的属性来判断用户是否登录
+      req.session.user = doc;
       res.redirect('/');
     }
   })

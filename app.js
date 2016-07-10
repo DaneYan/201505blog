@@ -6,10 +6,13 @@ var logger = require('morgan');//记录日志
 var cookieParser = require('cookie-parser');
 //解析请求体的 req.body
 var bodyParser = require('body-parser');
+var session = require('express-session');
+var MongoStore = require('connect-mongo')(session);
 //路由
 var routes = require('./routes/index');
 var user = require('./routes/user');
 var article = require('./routes/article');
+var settings = require('./settings');
 // 引入数据库操作模块
 var db = require('./db');
 var app = express();
@@ -29,6 +32,15 @@ app.use(logger('tiny'));//dev是一种日志格式
 app.use(bodyParser.json());//处理JSON请求体
 app.use(bodyParser.urlencoded({ extended: true }));//处理表单序列化 urlencoded请求体
 app.use(cookieParser());//处理cookie
+//使用会话中间件 req.session
+app.use(session({
+  secret:settings.secret,//指定加密的密钥
+  resave:true,//每次请求结束之后都重新保存session
+  saveUninitialized:true,//保存未初始化的session
+  store:new MongoStore({//指定会话的存储数据库
+    url:settings.url//指定数据库的url
+  })
+}));
 //处理静态文件
 app.use(express.static(path.join(__dirname, 'public')));
 

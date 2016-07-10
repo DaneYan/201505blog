@@ -1,3 +1,4 @@
 module.exports = {
-    url:'mongodb://123.57.143.189/201605blog'
+    secret:'zpfx',
+    url:'mongodb://123.57.143.189:27017/201605blog'
 }
