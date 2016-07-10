@@ -49,6 +49,8 @@ app.use(flash());
 //把flash中的消息 取出来赋给模板变量
 app.use(function(req,res,next){
   //res.locals 才是真正的渲染模板的对象
+  //可通过user是否有值来判断此用户是否登录
+  res.locals.user = req.session.user;//把会话中的user对象赋给模板变量
   res.locals.success = req.flash('success').toString();
   res.locals.error = req.flash('error').toString();
   next();

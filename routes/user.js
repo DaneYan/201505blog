@@ -56,9 +56,34 @@ router.get('/login', function(req, res, next) {
   res.render('user/login',{title:'登陆'});
 });
 
+router.post('/login',function(req,res){
+  var user = req.body;
+  user.password = md5(user.password);
+  Model('User').findOne(user,function(err,doc){
+    if(err){
+      req.flash('error','登录失败');
+      res.redirect('back');
+    }else{
+      if(doc){//根据用户名和加密后的密码能找到对应的用户，则表示成功
+        req.flash('success','登录成功');
+        req.session.user = doc;//把查出来的对象赋给session.user
+        res.redirect('/');//重定向首页
+      }else{
+        req.flash('error','登录失败');//如果失败的话重定向上个登录页
+        res.redirect('back');
+      }
+
+    }
+  })
+});
+
+
 //退出 当用户访问此路径的时候返回一个空白表单
 router.get('/logout', function(req, res, next) {
-  res.send('退出');
+  //把session中的user对象清空就表示退出登录
+   req.session.user = null;
+  //然后重新定向到登录页
+   res.redirect('/user/login');
 });
 
 module.exports = router;
