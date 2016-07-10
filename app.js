@@ -68,7 +68,8 @@ app.use('/article', article);//指定文章的路由
 app.use(function(req, res, next) {
   var err = new Error('Not Found');//构建ERROR对象
   err.status = 404;//设置响应码
-  next(err);//向下传递
+  res.render('404',{});
+  //next(err);//向下传递
 });
 
 // error handlers
